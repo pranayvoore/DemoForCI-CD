@@ -1,0 +1,41 @@
+name : CI-CD Implementation 
+
+on :
+ push : 
+   branches :
+   - main 
+   pull_request:
+    branches:
+    - main 
+
+    jobs:
+  deploy:
+    name: Job on EC-2 Instance 
+    runs-on: ubuntu-latest
+  strategy:
+      matrix:
+        node-version: [12.x]
+      
+    - name : Code CheckOut
+     steps:
+      - uses: actions/checkout@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build app
+        run: ng build --prod
+
+      - name: Deploy to my EC2 instance
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SOURCE: "./"
+          REMOTE_HOST: "ec2-65-2-129-222.ap-south-1.compute.amazonaws.com"
+          REMOTE_USER: "Administrator"
+          TARGET: "/home/ec2-user/SampleExpressApp"
