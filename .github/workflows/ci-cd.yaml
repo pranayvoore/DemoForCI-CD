@@ -2,24 +2,26 @@ name: S3 Deploy
 on:
   push:
     branches:
-      -main
- jobs:
+      - main
+
+jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@main
-      
-      - name: Use Node.js [12.x]
-        uses: actions/setup-node@v1
-        with:
-          node-version: [12.x]
-          
-      - name: Install dependencies
+
+      - name: Install
         run: npm install
-      
-      - name: Build app
-        run: ng build --prod
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
 
       - name: Deploy to my EC2 instance
         uses: easingthemes/ssh-deploy@v2.1.5
