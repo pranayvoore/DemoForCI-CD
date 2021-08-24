@@ -6,15 +6,12 @@ on :
    - main 
   
 
-    jobs:
+ jobs:
   build:
-    
     runs-on: ubuntu-latest
-  
-      steps:
-    - name : Code CheckOut
-   
-      - uses: actions/checkout@v2
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@main
       
       - name: Use Node.js [12.x]
         uses: actions/setup-node@v1
